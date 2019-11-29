@@ -19,17 +19,19 @@ class Opportunities extends React.Component {
     console.log("fetching opps...");
     fetch('http://localhost:8080/', {
       method: 'GET',
-      mode: 'no-cors',
       headers: {
         'Access-Control-Allow-Origin': 'localhost',
       }
     })
-      .then(res => res.json())
+      .then(res => {
+        res.json()
+      })
       .then(
         (result) => {
+          console.log("Result: ", result);
           this.setState({
             oppsLoaded: true,
-            opportunities: result.opportunities
+            opportunities: result
           });
         },
         (errorResp) => {
@@ -51,7 +53,7 @@ class Opportunities extends React.Component {
     return (
       <div className="opportunities-wrapper">
         { _.each(this.state.opportunities, (opportunity) => {
-          return <div className="opportunity">{ opportunity } </div>
+          return <div className="opportunity">{ opportunity.title } </div>
         })}
       </div>
     );
