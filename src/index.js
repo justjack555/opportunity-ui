@@ -16,26 +16,21 @@ class Opportunities extends React.Component {
   componentDidMount(){
     if(this.state.oppsLoaded) return;
 
-    console.log("fetching opps...");
     fetch('http://localhost:8080/', {
-      method: 'GET',
-      headers: {
-        'Access-Control-Allow-Origin': 'localhost',
-      }
+      method: 'GET'
     })
       .then(res => {
-        res.json()
+        return res.json();
       })
       .then(
         (result) => {
-          console.log("Result: ", result);
           this.setState({
             oppsLoaded: true,
-            opportunities: result
+            opportunities: result.opportunities
           });
         },
         (errorResp) => {
-          console.log("Error retrieving opportunities: ", errorResp.err);
+          console.log("Error retrieving opportunities: ", errorResp);
         }
       )
   }
@@ -52,9 +47,9 @@ class Opportunities extends React.Component {
   renderOpportunities = () => {
     return (
       <div className="opportunities-wrapper">
-        { _.each(this.state.opportunities, (opportunity) => {
-          return <div className="opportunity">{ opportunity.title } </div>
-        })}
+        { _.map(this.state.opportunities, (opportunity) => {
+          return <div key={ opportunity.id } className="opportunity">{ opportunity.title } </div>
+        }) }
       </div>
     );
   }
