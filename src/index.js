@@ -3,18 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import _ from 'underscore';
 
+import NewOpportunityModal from './components/new-opportunity-modal';
+
 class Opportunities extends React.Component {
 
   constructor(props){
     super(props);
     this.state = {
       oppsLoaded: false,
-      opportunities: []
+      opportunities: [],
+      showNewOppModal: false
     };
   }
 
   componentDidMount(){
-    if(this.state.oppsLoaded) return;
+    if(this.state.oppsLoaded) return <NewOpportunityModal />;
 
     fetch('http://localhost:8080/', {
       method: 'GET'
@@ -36,10 +39,18 @@ class Opportunities extends React.Component {
   }
 
   render() {
+    if(this.state.showNewOppModal){
+      return (
+        <NewOpportunityModal 
+          closeModal={ this.closeModal }
+        />
+      );
+    } 
     return (
       <div className="opportunities">
         <h1>Opportunities</h1>
         { this.renderOpportunities() }
+        { this.renderAddOpportunityButton() }
       </div>
     );
   }
@@ -52,6 +63,24 @@ class Opportunities extends React.Component {
         }) }
       </div>
     );
+  }
+
+  renderAddOpportunityButton = () => {
+    return (
+      <div className="opportunity-button">
+        <button onClick={ this.openNewOppModal }>Add Opportunity</button>
+      </div>
+    );
+  }
+
+  openNewOppModal = () => {
+    this.setState({
+      showNewOppModal: true      
+    });
+  }
+
+  closeModal = () => {
+    this.setState({ showNewOppModal: false });
   }
 }
 
